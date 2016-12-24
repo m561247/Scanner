@@ -1,0 +1,14 @@
+//library name
+#include<stdio123.h>
+#include<123
+// pointer
+  
+int *a,&aa,ab_c1;
+
+*a = &aa +ab_c1;
+
+a= *a/ab +ab_c1;
+
++-*/
+
+/*a &aa
