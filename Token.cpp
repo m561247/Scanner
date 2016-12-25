@@ -1,6 +1,7 @@
 #include "Token.h"
 #include <iomanip>
 #include <sstream>
+#include <algorithm>
 
 Token::Token(){
 	reset();
@@ -24,43 +25,52 @@ bool Token::isfolat(string myString){
     return iss.eof() && !iss.fail(); 
 }
 
+string  Token::Lower(string str)
+{
+    string ans = str;
+    transform(ans.begin(), ans.end(), ans.begin(), ::tolower);
+    return ans;
+}
+
 void Token::assign_type(Mode m){
 	
-	if( m!= inblock && isfolat(lexeme) )
+	if( m!= letter_block && m!= string_mode && isfolat(lexeme) )
 		category = constant;
-	else if(lexeme.length()==1 &&(lexeme[0]=='#' || lexeme[0]==',' || 
-			lexeme[0]==';' 	   || lexeme[0]==':' ||	lexeme[0]=='\"'|| lexeme[0]=='\'') )
+	else if(lexeme.length()==1 &&(lexeme[0]=='#'  || lexeme[0]==',' || 
+			lexeme[0]==';' 	   || lexeme[0]==':') && (m != string_mode && m != letter_block) )
 		category = punctuation;
-	else if(lexeme.compare("include") == 0 || lexeme.compare("main")   == 0 ||
-			lexeme.compare("if")      == 0 || lexeme.compare("else")   == 0 ||
-			lexeme.compare("elseif")  == 0 || lexeme.compare("for")    == 0 ||
-			lexeme.compare("while")   == 0 || lexeme.compare("do")     == 0 ||
-			lexeme.compare("return")  == 0 || lexeme.compare("switch") == 0 ||
-			lexeme.compare("case")    == 0 || lexeme.compare("void") == 0)
+	else if( lexeme.length()==1 &&(lexeme[0]=='\"'|| lexeme[0]=='\'') )
+		category = punctuation;
+	else if((Lower(lexeme).compare("include") == 0 || Lower(lexeme).compare("main")   == 0 ||
+			 Lower(lexeme).compare("if")      == 0 || Lower(lexeme).compare("else")   == 0 ||
+			 Lower(lexeme).compare("elseif")  == 0 || Lower(lexeme).compare("for")    == 0 ||
+			 Lower(lexeme).compare("while")   == 0 || Lower(lexeme).compare("do")     == 0 ||
+			 Lower(lexeme).compare("return")  == 0 || Lower(lexeme).compare("switch") == 0 ||
+			 Lower(lexeme).compare("case")    == 0 || Lower(lexeme).compare("void")   == 0)&& (m != string_mode && m != letter_block))
 		category = reserved;
-	else if(lexeme.compare("+")  == 0 || lexeme.compare("-")  == 0 ||
-			lexeme.compare("*")  == 0 || lexeme.compare("/")  == 0 ||
-			lexeme.compare("++") == 0 || lexeme.compare("--") == 0 ||
-			lexeme.compare("=")  == 0 || lexeme.compare("&")  == 0 ||
-			lexeme.compare("|")  == 0 || lexeme.compare("%")  == 0 ||
-			lexeme.compare("^")  == 0)
+	else if((lexeme.compare("+")  == 0 || lexeme.compare("-")  == 0 ||
+			 lexeme.compare("*")  == 0 || lexeme.compare("/")  == 0 ||
+			 lexeme.compare("++") == 0 || lexeme.compare("--") == 0 ||
+			 lexeme.compare("=")  == 0 || lexeme.compare("&")  == 0 ||
+			 lexeme.compare("|")  == 0 || lexeme.compare("%")  == 0 ||
+			lexeme.compare("^")  == 0 )&& (m != string_mode && m != letter_block))
 		category = operate;
-	else if(lexeme.compare("char")  == 0 || lexeme.compare("int") == 0 ||
-			lexeme.compare("float") == 0 ){
+	else if((Lower(lexeme).compare("char")  == 0   || Lower(lexeme).compare("int") == 0 ||
+			 Lower(lexeme).compare("float") == 0 ) && (m != string_mode && m != letter_block)){
 			category = reserved;
 			mode=define_mode;
 	}
-	else if(lexeme.compare(">")  == 0 || lexeme.compare(">=") == 0 ||
-			lexeme.compare("<")  == 0 || lexeme.compare("<=") == 0 ||
-			lexeme.compare("!=") == 0 || lexeme.compare("!") == 0 )
+	else if((lexeme.compare(">")  == 0 || lexeme.compare(">=") == 0 ||
+			 lexeme.compare("<")  == 0 || lexeme.compare("<=") == 0 ||
+			 lexeme.compare("!=") == 0 || lexeme.compare("!") == 0 )&& (m != string_mode && m != letter_block))
 			category = comparator;
-	else if(lexeme.compare("printf")  == 0 || lexeme.compare("scanf") == 0){
+	else if((Lower(lexeme).compare("printf")  == 0 || Lower(lexeme).compare("scanf") == 0) && (m != string_mode && m != letter_block)){
 		category = reserved;
 		mode=string_mode;
 	}
-	else if(lexeme.length() == 1 && (lexeme[0] =='(' || lexeme[0] ==')' ||
-									 lexeme[0] =='[' || lexeme[0] ==']' ||
-									 lexeme[0] =='{' || lexeme[0] =='}')){
+	else if(lexeme.length() == 1 && (lexeme[0] =='(' || lexeme[0] ==')'  ||
+									 lexeme[0] =='[' || lexeme[0] ==']'  ||
+									 lexeme[0] =='{' || lexeme[0] =='}') && (m != string_mode && m != letter_block)){
 		category = bracket;
 	} 
 	else if(m ==  define_mode) {
@@ -75,7 +85,7 @@ void Token::assign_type(Mode m){
 		category = comment;
 	}
 	else if(m == string_mode ){
-		if(lexeme[0] == '%' || lexeme[0] == '\\')
+		if(lexeme == "%d" || lexeme == "%f" || lexeme == "%c" || lexeme[0] == '\\')
 			category = format;
 		else
 			category = printed;
@@ -86,8 +96,11 @@ void Token::assign_type(Mode m){
 		else
 		category = letter;
 	}
-	else if(lexeme == "newline"){
+	else if( m == newline_token ){
 		category = newline;	
+	}
+	else if( m == space_token ){
+		category = space;
 	}
 	else 
 		category = none;	
@@ -121,6 +134,7 @@ void Token::print_token(){
 		case constant	:	cout <<  "constant"			;break;
 		case letter		:	cout <<  "letter"			;break;
 		case comparator	:	cout <<  "comparator"		;break;
+		case space		:	cout <<  "space"			;break;
 		default :break;
 	}
 	cout << endl;

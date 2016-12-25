@@ -1,14 +1,67 @@
-//library name
-#include<stdio123.h>
-#include<123
-// pointer
-  
-int *a,&aa,ab_c1;
+//include
 
-*a = &aa +ab_c1;
+#include  < stdio.h >
+#include   stdio+-*>
+#include < stdio+-
 
-a= *a/ab +ab_c1;
+//main
 
-+-*/
+main
+int main ()
+"main";
 
-/*a &aa
+//char	int float
+
+char a;
+"char";
+char *a ,&a;
+
+int b 
+int *bb,&bbb;
+"int"
+
+float c;
+float *cc,&ccc;
+"float\n";
+
+//if else else if
+
+if( )
+elseif()
+else{}
+
+"if elseif else"; 
+
+//for while do
+int i ;
+
+for( i = 0 ; i < 10 ; i++)
+
+while ( b-- )
+
+do( *aa++ ){ }
+
+"for while do";
+scanf(" for while do ");
+
+// return 
+
+return &ccc;
+" return ";
+
+//switch case
+
+switch( c )
+case : 1.1; return;
+case : 2  ; return;
+
+printf("switch case")
+"switch case"
+
+//prinf scanf
+
+printf( "a b c++  1+2  %d %f %c \a\b\c \n" );
+scanf ( "a+c ,1\n 123%i123" );
+
+// operate
+

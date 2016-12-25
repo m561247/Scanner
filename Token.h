@@ -7,9 +7,9 @@ using namespace std;
 class Token
 {
 	public:
-		enum token_type {none,reserved,library,comment,identifier,constant,newline,letter
+		enum token_type {none,reserved,library,comment,identifier,constant,newline,letter,space
 						,operate,comparator,bracket,format,pointer,address,punctuation,printed};
-		enum Mode{defaul,string_mode,define_mode,command_mode,print_id,undefine,inblock,letter_block};
+		enum Mode{defaul,string_mode,define_mode,command_mode,print_id,undefine,inblock,letter_block,newline_token,space_token};
 		token_type category;
 		Mode mode;
 		string lexeme;
@@ -20,7 +20,7 @@ class Token
 		void reset();
 		bool isfolat(string);
 	private:
-		
+		string Lower(string);
 };
 
 #endif

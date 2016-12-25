@@ -4,6 +4,7 @@
 #include "Token.h"
 #include<vector>
 #include<map>
+#include <algorithm>
 using namespace std;
 class CFG
 {
@@ -17,8 +18,11 @@ class CFG
 		stack<char>  state;
 		map<string,int> symbol_table;
 	private:
+		void eraceSpace();
 		void connectPointer();
 		void check_library();
+		void connectOperater();
+		string Lower(string);
 };
 
 #endif

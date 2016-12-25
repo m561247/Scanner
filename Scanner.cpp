@@ -19,6 +19,13 @@
 			next_char = input[i];
 			next_type = get_type(next_char);
 			if(next_type == white_space || next_type == tab){
+				//if(now_mode == Token::string_mode){
+					next_token.set_lexeme(lexeme);
+					next_token.assign_type(Token::space_token);
+					token_list.push_back(next_token);
+					next_token.reset();
+					lexeme = "";
+				//}
 				i++;
 			}
 		    else if(!state.empty() && state.top() =='\"' && next_char!='\\' && next_char!='\"' && next_type!=new_line && now_mode!=Token::string_mode){
@@ -119,11 +126,15 @@
       				i++;
       				continue;
 				}
-				else if( next_char == '%' && now_mode == Token::string_mode && state.top() == '\"' && (input[i+1] == 'd' ||  input[i+1] == 'f')){
+				else if( next_char == '%' && now_mode == Token::string_mode && state.top() == '\"'){
 					lexeme = lexeme + next_char;
 					i++;
-					next_char = input[i];
-					lexeme = lexeme + next_char;
+					if((input[i] == 'd' ||  input[i] == 'f' || input[i] == 'c')){
+						next_char = input[i];
+						lexeme = lexeme + next_char;
+					}
+					else
+						continue;
 				}
 				else if( next_char == '/' && (input[i+1] =='*' || input[i+1] =='/')){
 					now_mode = Token::command_mode;
@@ -185,7 +196,7 @@
 			{
 				lexeme = lexeme + "newline";
 				next_token.set_lexeme(lexeme);
-			   	next_token.assign_type(Token::defaul);
+			   	next_token.assign_type(Token::newline_token);
 			  	token_list.push_back(next_token);
 			  	next_token.reset();
 			  	lexeme = "";
