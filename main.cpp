@@ -28,7 +28,7 @@ int main(void){
 	 	whole_file += "\n";	
 	}
    
-   Scanner s;
+   Scanner s("scanner_"+filename);
    cout << "pass1\n";
    s.setinput(whole_file);
    s.scan();

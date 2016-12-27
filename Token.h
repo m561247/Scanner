@@ -2,6 +2,7 @@
 #define TOKEN_H
 #include<string>
 #include<iostream>
+#include <fstream>
 using namespace std;
 
 class Token
@@ -16,7 +17,7 @@ class Token
 		Token();
 		void set_lexeme(string);
 		void assign_type(Mode m);
-		void print_token();
+		void print_token(ofstream& output);
 		void reset();
 		bool isfolat(string);
 	private:

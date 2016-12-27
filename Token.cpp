@@ -106,36 +106,37 @@ void Token::assign_type(Mode m){
 		category = none;	
 } 
 
-void Token::print_token(){
+void Token::print_token(ofstream& output){
 	if(category == format){
-		cout << "token " << setw(12) << left << lexeme << " with length  1 belongs to ";
+		output << "token " << setw(12) << left << lexeme << " with length  1 belongs to ";
 	}
 	else if(category == comment){
-		cout << "token " << lexeme << " with length -1 belongs to ";
+		output << "token " << lexeme << " with length -1 belongs to ";
 	}
 	else{
-		cout << "token " << setw(12) << left << lexeme << " with length ";
-		cout << setw(2) << right << lexeme.length()  << " belongs to ";
+		output << "token " << setw(12) << left << lexeme << " with length ";
+		output << setw(2) << right << lexeme.length()  << " belongs to ";
 	}
 	switch(category){
-		case library	:	cout <<  "library name"		;break; 
-		case punctuation: 	cout <<  "punctuation"		;break;
-		case reserved	:	cout <<  "reserved word"	;break;
-		case identifier	:	cout <<  "identifier"		;break;
-		case pointer	:	cout <<  "pointer"			;break;
-		case address	:	cout <<  "address"			;break;
-		case comment	:	cout <<  "comment"			;break;
-		case printed	:	cout <<  "printed token"	;break;
-		case format		:	cout <<  "format specifier"	;break;
-		case bracket	:	cout <<  "bracket" 			;break;
-		case none		: 	cout <<  "undefine token"	;break;
-		case newline	:	cout <<  "newline"			;break;
-		case operate	:	cout <<  "operator"			;break;
-		case constant	:	cout <<  "constant"			;break;
-		case letter		:	cout <<  "letter"			;break;
-		case comparator	:	cout <<  "comparator"		;break;
-		case space		:	cout <<  "space"			;break;
+		case library	:	output <<  "library name"		;break; 
+		case punctuation: 	output <<  "punctuation"		;break;
+		case reserved	:	output <<  "reserved word"	;break;
+		case identifier	:	output <<  "identifier"		;break;
+		case pointer	:	output <<  "pointer"			;break;
+		case address	:	output <<  "address"			;break;
+		case comment	:	output <<  "comment"			;break;
+		case printed	:	output <<  "printed token"	;break;
+		case format		:	output <<  "format specifier"	;break;
+		case bracket	:	output <<  "bracket" 			;break;
+		case none		: 	output <<  "undefine token"	;break;
+		case newline	:	output <<  "newline"			;break;
+		case operate	:	output <<  "operator"			;break;
+		case constant	:	output <<  "constant"			;break;
+		case letter		:	output <<  "letter"			;break;
+		case comparator	:	output <<  "comparator"		;break;
+		case space		:	output <<  "space"			;break;
 		default :break;
 	}
-	cout << endl;
+	output << endl;
+	return;
 }

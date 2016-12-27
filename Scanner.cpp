@@ -1,5 +1,8 @@
 #include "Scanner.h"
 #include <iomanip>
+	Scanner::Scanner(string filename){
+		outfile.open(filename.c_str());
+	}
 	void Scanner::setinput(string in){
 		input = in;
 		return;
@@ -244,13 +247,13 @@
 		for(int j = 0; j < token_list.size() ;j++)
 		{
 				if(token_list[j].category == Token::none){
-					cout  << "Line " << setw(4) << right << count+1 << ":" << " ERROR! " ;
-					token_list[j].print_token(); 
+					outfile  << "Line " << setw(4) << right << count+1 << ":" << " ERROR! " ;
+					token_list[j].print_token(outfile); 
 					count++;
 				}
 				else if(token_list[j].category != Token::newline){
-					cout << "Line " << setw(4) << right << count+1   << ":";
-					token_list[j].print_token();
+					outfile << "Line " << setw(4) << right << count+1   << ":";
+					token_list[j].print_token(outfile);
 					count++;
 					sum++;
 					switch(token_list[j].category){
@@ -272,31 +275,34 @@
 				}
 		}
 		
-		cout << "\n\nTotal: " << sum << " tokens\n" << endl;
+		outfile << "\n\nTotal: " << sum << " tokens\n" << endl;
 		if(reserved)
-			cout << "Reserved word" 	<< ": " << reserved		<< endl;
+			outfile << "Reserved word" 	<< ": " << reserved		<< endl;
 		if(library)
-			cout << "Library name"  	<< ": " << library		<< endl;
+			outfile << "Library name"  	<< ": " << library		<< endl;
 		if(commennt)
-			cout << "Comment" 			<< ": " << commennt		<< endl;
+			outfile << "Comment" 			<< ": " << commennt		<< endl;
 		if(identifier)
-			cout << "Identifier"		<< ": " << identifier	<< endl;
+			outfile << "Identifier"		<< ": " << identifier	<< endl;
 		if(constant)
-			cout << "Constant"			<< ": " << constant		<< endl;
+			outfile << "Constant"			<< ": " << constant		<< endl;
 		if(operate)
-			cout << "Operator" 			<< ": " << operate		<< endl;
+			outfile << "Operator" 			<< ": " << operate		<< endl;
 		if(comparator)
-			cout << "Comparator"		<< ": " << comparator	<< endl;
+			outfile << "Comparator"		<< ": " << comparator	<< endl;
 		if(bracket)
-			cout << "Bracket" 			<< ": " << bracket		<< endl;
+			outfile << "Bracket" 			<< ": " << bracket		<< endl;
 		if(format)
-			cout << "Format specifier" 	<< ": " << format		<< endl;
+			outfile << "Format specifier" 	<< ": " << format		<< endl;
 		if(pointer)
-			cout << "Pointer" 			<< ": " << pointer		<< endl;
+			outfile << "Pointer" 			<< ": " << pointer		<< endl;
 		if(address)
-			cout << "Address" 			<< ": " << address		<< endl;
+			outfile << "Address" 			<< ": " << address		<< endl;
 		if(punctuation)
-			cout << "Punctuation" 		<< ": " << punctuation	<< endl;
+			outfile << "Punctuation" 		<< ": " << punctuation	<< endl;
 		if(printed)
-			cout << "Printed token" 	<< ": " << printed		<< endl;
+			outfile << "Printed token" 	<< ": " << printed		<< endl;
+		
+		
+		outfile.close();
 	}
