@@ -69,8 +69,9 @@ void CFG::eraceSpace(){
 void CFG::check_command(){
 	for(int i=0 ; i<token_list.size()-1 ; i++){
 		if( token_list[i].category == Token::comment &&  token_list[i].lexeme.c_str()[0] =='/' && token_list[i].lexeme.c_str()[1] =='*'){
-			cout << token_list[i].lexeme.c_str()[token_list[i].lexeme.length()-2] << "  " << token_list[i].lexeme.c_str()[token_list[i].lexeme.length()-1] << endl;
-			if(token_list[i].lexeme.c_str()[token_list[i].lexeme.length()-2] != '*' || token_list[i].lexeme.c_str()[token_list[i].lexeme.length()-1] !='/'){
+			//cout << token_list[i].lexeme.c_str()[token_list[i].lexeme.length()-2] << " -1 " << token_list[i].lexeme.c_str()[token_list[i].lexeme.length()-1] << endl;
+			//token_list[i].lexeme.c_str()[token_list[i].lexeme.length()-2] != '*' || token_list[i].lexeme.c_str()[token_list[i].lexeme.length()-1] !='/' 
+			if(token_list[i].lexeme.find("*/") == string::npos){
 				token_list[i].category = Token::none;
 			}
 		}

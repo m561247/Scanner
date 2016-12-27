@@ -159,7 +159,10 @@
       			state.push(next_char);
 			   	lexeme = lexeme + next_char;
 			   	next_token.set_lexeme(lexeme);
-			   	next_token.assign_type(now_mode);
+			   	if(now_mode == Token::string_mode)
+			   		next_token.assign_type(Token::defaul);
+			   	else
+			   		next_token.assign_type(now_mode);
 			  	token_list.push_back(next_token);
 			  	next_token.reset();
 			  	lexeme = "";
@@ -186,7 +189,10 @@
 				}*/ 
 			   	lexeme = lexeme + next_char;
 			   	next_token.set_lexeme(lexeme);
-			   	next_token.assign_type(now_mode);
+			   	if(now_mode == Token::string_mode)
+			   		next_token.assign_type(Token::defaul);
+			   	else
+			   		next_token.assign_type(now_mode);
 			  	token_list.push_back(next_token);
 			  	next_token.reset();
 			  	lexeme = "";
