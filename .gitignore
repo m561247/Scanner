@@ -301,3 +301,11 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+
+#
+*.o
+*.win
+*.dev
+*.exe
+*.layout
