@@ -22,6 +22,8 @@ class CFG
 		void connectPointer();
 		void check_library();
 		void connectOperater();
+		void determine_const();
+		void final_erace();
 		string Lower(string);
 };
 

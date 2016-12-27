@@ -22,6 +22,8 @@ void CFG::check_token(){
 	check_library();
 	connectPointer();
 	connectOperater();
+	determine_const();
+	final_erace(); 
 }
 
 void CFG::eraceSpace(){
@@ -109,15 +111,56 @@ void CFG::connectOperater(){
 			token_list[i].category = Token::comparator;
 			token_list.erase(token_list.begin()+i+1);
 		}
-		else if(((token_list[i].lexeme   == "+" && token_list[i].category   == Token::operate  	 &&
-			      token_list[i+1].lexeme == "+" && token_list[i].category   == Token::operate)   ||
-			     (token_list[i].lexeme   == "-" && token_list[i].category   == Token::comparator &&
-			      token_list[i+1].lexeme == "-" && token_list[i].category   == Token::operate) ) &&
+		else if(((token_list[i].lexeme     == "+" && token_list[i].category   == Token::operate    &&
+			      token_list[i+1].lexeme   == "+" && token_list[i].category   == Token::operate)   ||
+			     (token_list[i].lexeme     == "-" && token_list[i].category   == Token::operate    &&
+			      token_list[i+1].lexeme   == "-" && token_list[i].category   == Token::operate    &&
+				  token_list[i+2].category != Token::constant							       ))  &&
 			     (token_list[i-1].category   == Token::identifier || token_list[i-1].category   == Token::address || token_list[i-1].category   == Token::pointer )) 
 				{
 			token_list[i].lexeme += token_list[i+1].lexeme;
 			token_list[i].category = Token::operate;
 			token_list.erase(token_list.begin()+i+1);
+		}
+	}
+}
+
+void CFG::determine_const(){
+	for(int i=1 ; i<token_list.size()-1 ; i++){
+		if( token_list[i].category == Token::space && !( (token_list[i-1].category == Token::operate  &&  token_list[i-1].lexeme == "-"  && token_list[i+1].category == Token::constant)) ){
+			token_list.erase(token_list.begin()+i);			
+		}
+	}
+	for(int i=0 ; i<token_list.size()-1 ; i++){
+		if(token_list[i  ].lexeme   == "-" && token_list[i  ].category   == Token::operate   &&
+		   token_list[i-1].lexeme   == "(" && token_list[i-1].category   == Token::bracket   &&
+		   token_list[i+2].lexeme   == ")" && token_list[i+2].category   == Token::bracket   &&
+		   token_list[i+1].category   == Token::constant)
+		{
+			token_list[i-1].lexeme += token_list[i].lexeme + token_list[i+1].lexeme + token_list[i+2].lexeme;
+			token_list[i-1].category = Token::constant;
+			token_list.erase(token_list.begin()+i,token_list.begin()+i+3);
+		}
+	}
+	
+	for(int i=0 ; i<token_list.size()-1 ; i++){
+		if(token_list[i  ].lexeme   == "-" && token_list[i  ].category   == Token::operate   &&
+		   token_list[i+1].category == Token::constant && token_list[i-1].category != Token::identifier  &&
+		   token_list[i-1].category != Token::address  && token_list[i-1].category != Token::pointer	 &&
+		   token_list[i-1].category != Token::constant)
+		{
+			token_list[i].lexeme += token_list[i+1].lexeme;
+			token_list[i].category = Token::constant;
+			token_list.erase(token_list.begin()+i+1);
+		}
+	}
+}
+
+void CFG::final_erace(){
+	for(int i=0 ; i<token_list.size()-1 ; i++){
+		if(token_list[i].category   == Token::space) {
+			token_list.erase(token_list.begin()+i);
+			i--; 
 		}
 	}
 }
