@@ -32,6 +32,7 @@ int main(void){
    cout << "pass1\n";
    s.setinput(whole_file);
    s.scan();
+   s.print_result();
 	
 	return 0;
 	

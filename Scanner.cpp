@@ -214,23 +214,7 @@
 		CFG c = CFG( token_list , symbol_table);
 		c.check_token();
 		token_list = c.gettoken_list();
-		int count =0,sum=0;
-		for(int j = 0; j < token_list.size() ;j++)
-		{
-				if(token_list[j].category == Token::none){
-					cout  << "Line " << setw(4) << right << count+1 << "Error->" ;
-					token_list[j].print_token();
-					count++;
-				}
-				else{
-					cout << "Line " << setw(4) << right << count+1   << ":";
-					token_list[j].print_token();
-					count++;
-					sum++;
-				}
-		}
 		
-		cout << "\n\nTotal: " << count << " tokens"<< endl;
 		return;
 	}
 	
@@ -245,4 +229,68 @@
 		else if(x == '{' || x == '(' || x == '[') return left_brace;
 		else if(x == '}' || x == ')' || x == ']') return right_brace;
 		else return none;
+	}
+	
+	void Scanner::print_result(){
+		int count =0,sum=0;
+		int reserved=0,library=0,commennt=0,identifier=0,constant=0,operate=0;
+		int comparator=0,bracket=0,format=0,pointer=0,address=0,punctuation=0,printed=0,letter=0;
+		for(int j = 0; j < token_list.size() ;j++)
+		{
+				if(token_list[j].category == Token::none){
+					cout  << "Line " << setw(4) << right << count+1 << ":" << " ERROR! " ;
+					token_list[j].print_token(); 
+					count++;
+				}
+				else if(token_list[j].category != Token::newline){
+					cout << "Line " << setw(4) << right << count+1   << ":";
+					token_list[j].print_token();
+					count++;
+					sum++;
+					switch(token_list[j].category){
+						case Token::reserved	: reserved++	;break;
+						case Token::library		: library++		;break;
+						case Token::comment		: commennt++	;break;
+						case Token::identifier	: identifier++	;break;
+						case Token::constant	: constant++	;break;
+						case Token::operate		: operate++		;break;
+						case Token::comparator	: comparator++	;break;
+						case Token::bracket		: bracket++		;break;
+						case Token::format 		: format++		;break;
+						case Token::pointer		: pointer++		;break;
+						case Token::address		: address++		;break;
+						case Token::punctuation	: punctuation++	;break;
+						case Token::printed		: printed++		;break;
+						case Token::letter		: letter++		;break;
+					}
+				}
+		}
+		
+		cout << "\n\nTotal: " << sum << " tokens\n" << endl;
+		if(reserved)
+			cout << "Reserved word" 	<< ": " << reserved		<< endl;
+		if(library)
+			cout << "Library name"  	<< ": " << library		<< endl;
+		if(commennt)
+			cout << "Comment" 			<< ": " << commennt		<< endl;
+		if(identifier)
+			cout << "Identifier"		<< ": " << identifier	<< endl;
+		if(constant)
+			cout << "Constant"			<< ": " << constant		<< endl;
+		if(operate)
+			cout << "Operator" 			<< ": " << operate		<< endl;
+		if(comparator)
+			cout << "Comparator"		<< ": " << comparator	<< endl;
+		if(bracket)
+			cout << "Bracket" 			<< ": " << bracket		<< endl;
+		if(format)
+			cout << "Format specifier" 	<< ": " << format		<< endl;
+		if(pointer)
+			cout << "Pointer" 			<< ": " << pointer		<< endl;
+		if(address)
+			cout << "Address" 			<< ": " << address		<< endl;
+		if(punctuation)
+			cout << "Punctuation" 		<< ": " << punctuation	<< endl;
+		if(printed)
+			cout << "Printed token" 	<< ": " << printed		<< endl;
 	}

@@ -11,6 +11,7 @@ class Scanner{
 		void setinput(string in);
 		void scan();
 		enum char_type {none,white_space, letter,slash, digit,symbol, left_brace, right_brace, colon, new_line, tab,operate};
+		void print_result();
 	private:
 		int stall;
 		Token::Mode now_mode;

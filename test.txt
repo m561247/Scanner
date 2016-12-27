@@ -1,8 +1,14 @@
+//command
+/*T*/
+/*F
+*/F
+
 //include
 
 #include  < stdio.h >
 #include   stdio+-*>
 #include < stdio+-
+#include < stdio+- >
 
 //main
 
@@ -65,8 +71,9 @@ scanf ( "a+c ,1\n 123%i123" );
 
 // operate
 
-a = a +1;
-b = b-1;
-c = c - 1;
-c = c --1;
-a = -3 - ( -2 );
+a = ++a + 1+*b;
+a = a++ + -1/ *bb;
+
+c = (-3*-2) * c+b/-3*(-1);
+--*cc*-2 = (a+b+c) * a /b;
+

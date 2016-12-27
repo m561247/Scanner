@@ -23,6 +23,7 @@ class CFG
 		void check_library();
 		void connectOperater();
 		void determine_const();
+		void check_command();
 		void final_erace();
 		string Lower(string);
 };

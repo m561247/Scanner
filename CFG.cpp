@@ -19,11 +19,12 @@ string  CFG::Lower(string str)
 
 void CFG::check_token(){
 	eraceSpace();
+	check_command();
 	check_library();
 	connectPointer();
 	connectOperater();
 	determine_const();
-	final_erace(); 
+	final_erace();
 }
 
 void CFG::eraceSpace(){
@@ -37,13 +38,41 @@ void CFG::eraceSpace(){
 			i=j-1;
 		}
 	}
+	
+	//connect printed
+	for(int i=0 ; i<token_list.size()-1 ; i++){
+		if(token_list[i].category == Token::letter){
+				token_list[i].category = Token::printed;
+		}
+	}
+	for(int i=0 ; i<token_list.size()-1 ; i++){
+		if(token_list[i].category == Token::printed && token_list[i+1].category == Token::printed){
+			token_list[i].lexeme += token_list[i+1].lexeme;
+			token_list.erase(token_list.begin()+i+1);
+			i--;
+		} 
+	} 
+	
 	// 1.++ --  2.!= <= >=  3.== 4. - 1
 	for(int i=1 ; i<token_list.size()-1 ; i++){
 		if( token_list[i].category == Token::space && !( (token_list[i-1].category == Token::comparator && token_list[i+1].category == Token::comparator) || 
 														 (token_list[i-1].category == Token::operate    && token_list[i+1].category == Token::operate)    ||
 														 (token_list[i-1].category == Token::comparator && token_list[i+1].category == Token::operate)    ||
-														 (token_list[i-1].category == Token::operate    && token_list[i+1].category == Token::constant))  ){
+														 (token_list[i-1].category == Token::operate    && token_list[i+1].category == Token::constant)   || 
+														 (token_list[i-1].category == Token::operate    && token_list[i+1].category == Token::identifier) ||
+														 (token_list[i-1].category == Token::operate    && token_list[i+1].category == Token::none)		) ){
 			token_list.erase(token_list.begin()+i);			
+		}
+	}
+}
+
+void CFG::check_command(){
+	for(int i=0 ; i<token_list.size()-1 ; i++){
+		if( token_list[i].category == Token::comment &&  token_list[i].lexeme.c_str()[0] =='/' && token_list[i].lexeme.c_str()[1] =='*'){
+			cout << token_list[i].lexeme.c_str()[token_list[i].lexeme.length()-2] << "  " << token_list[i].lexeme.c_str()[token_list[i].lexeme.length()-1] << endl;
+			if(token_list[i].lexeme.c_str()[token_list[i].lexeme.length()-2] != '*' || token_list[i].lexeme.c_str()[token_list[i].lexeme.length()-1] !='/'){
+				token_list[i].category = Token::none;
+			}
 		}
 	}
 }
@@ -85,14 +114,15 @@ void CFG::check_library(){
 				}
 			}
 			if(state.empty()){
-				string temp;
+				string temp="";
 				for(int merge=i+2; merge<=j ;merge++){
 					temp = temp+token_list[merge].lexeme;
 				}
-				token_list.erase (token_list.begin()+i+3,token_list.begin()+j+1);
-				token_list[i+2].lexeme=temp;
+				token_list[i+2].lexeme = temp;
 				token_list[i+2].category = Token::library;
+				token_list.erase (token_list.begin()+i+3,token_list.begin()+j+1);
 			}
+			state = stack<char>();
 		}
 	}
 }
@@ -116,7 +146,8 @@ void CFG::connectOperater(){
 			     (token_list[i].lexeme     == "-" && token_list[i].category   == Token::operate    &&
 			      token_list[i+1].lexeme   == "-" && token_list[i].category   == Token::operate    &&
 				  token_list[i+2].category != Token::constant							       ))  &&
-			     (token_list[i-1].category   == Token::identifier || token_list[i-1].category   == Token::address || token_list[i-1].category   == Token::pointer )) 
+			    ((token_list[i-1].category   == Token::identifier || token_list[i-1].category   == Token::address || token_list[i-1].category   == Token::pointer ) || 
+				 (token_list[i+2].category   == Token::identifier || token_list[i+2].category   == Token::address || token_list[i+2].category   == Token::pointer ) )) 
 				{
 			token_list[i].lexeme += token_list[i+1].lexeme;
 			token_list[i].category = Token::operate;
@@ -141,8 +172,7 @@ void CFG::determine_const(){
 			token_list[i-1].category = Token::constant;
 			token_list.erase(token_list.begin()+i,token_list.begin()+i+3);
 		}
-	}
-	
+	} 
 	for(int i=0 ; i<token_list.size()-1 ; i++){
 		if(token_list[i  ].lexeme   == "-" && token_list[i  ].category   == Token::operate   &&
 		   token_list[i+1].category == Token::constant && token_list[i-1].category != Token::identifier  &&
