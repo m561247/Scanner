@@ -22,13 +22,11 @@
 			next_char = input[i];
 			next_type = get_type(next_char);
 			if(next_type == white_space || next_type == tab){
-				//if(now_mode == Token::string_mode){
 					next_token.set_lexeme(lexeme);
 					next_token.assign_type(Token::space_token);
 					token_list.push_back(next_token);
 					next_token.reset();
 					lexeme = "";
-				//}
 				i++;
 			}
 		    else if(!state.empty() && state.top() =='\"' && next_char!='\\' && next_char!='\"' && next_type!=new_line && now_mode!=Token::string_mode){
@@ -78,8 +76,13 @@
 					next_type = get_type(next_char);
 				}
 				if( now_mode == Token::define_mode ){
-					if(lexeme[0] != '&' || lexeme[0] !='*')
+					if(lexeme[0] != '&' && lexeme[0] !='*'){
+						symbol_table.insert(pair<string,int>(lexeme,0));
+					} 
+					else{
 						symbol_table.insert(pair<string,int>(lexeme,1));
+						symbol_table[lexeme] = token_list.size()-1;
+					}
 					next_token.set_lexeme(lexeme);
 					next_token.assign_type(Token::define_mode); 
 				}
@@ -171,25 +174,7 @@
 			  	lexeme = "";
 		   		i++;
 			}
-			else if(next_type == right_brace){
-				/*if(next_char == '}'){
-					if(state.top() == '{')
-						state.pop();
-					else
-						state.push('}');
-				}
-				else if(next_char == ']'){
-					if(state.top() == '[')
-						state.pop();
-					else
-						state.push('[');
-				}
-				else if(next_char == ')'){
-					if(state.top() == '(')
-						state.pop();
-					else
-						state.push(')');
-				}*/ 
+			else if(next_type == right_brace){ 
 			   	lexeme = lexeme + next_char;
 			   	next_token.set_lexeme(lexeme);
 			   	if(now_mode == Token::string_mode)
@@ -217,7 +202,6 @@
 			if(!token_list.empty() && token_list[token_list.size()-1].mode != Token::defaul){
 				now_mode=token_list[token_list.size()-1].mode;
 			}
-			//token_list[token_list.size()-1].print_token();
 		}
 		
 		CFG c = CFG( token_list , symbol_table);
